@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .container{width: 100%;height: 100%;}
+        .container div{height: 200px;}
+        .container .top{width: 100%;display: flex;justify-content: space-between;}
+        .top_left, .top_content, .top_right{flex: 1;}
+        .top_content{margin: 0 4px;}
+        .bottom{width: 100%;display: flex;justify-content: space-between}
+        .bottom_left, .bottom_con, .bottom_right{flex: 1;}
+        .bottom_con{margin: 0 4px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top">
+        <div class="top_left" style="background: #000"></div>
+        <div class="top_content" style="background: purple;"></div>
+        <div class="top_right" style="background: yellow"></div>
+    </div>
+    <div class="content">
+        <div style="width: 100%;background: red"></div>
+    </div>
+    <div class="bottom">
+        <div class="bottom_left" style="background: pink"></div>
+        <div class="bottom_con" style="background: grey"></div>
+        <div class="bottom_right" style="background: yellow"></div>
+    </div>
+</div>
+</body>
+</html>

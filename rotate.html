@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>three.js css3d - 元素周期表</title>
+    <link rel="stylesheet" href="css/rotate.css">
+    <link rel="stylesheet" href="css/colorBarindex.css">
+</head>
+<body>
+<script src="js/three.js"></script>
+<script src="js/tween.min.js"></script>
+<script src="js/TrackballControls.js"></script>
+<script src="js/CSS3DRenderer.js"></script>
+<script src="js/colorBarindex.js"></script>
+
+<div id="container">
+</div>
+<div id="tip_list">
+    <div class="tip_title" id="title">
+        特等奖中奖名单
+    </div>
+    <div id="leafContainer"></div>
+    <div class="btn">
+        <button id="back" disabled="disabled">返回抽奖</button>
+    </div>
+</div>
+<div id="lottery">
+    <img src="image/prize_start.png" id="prize_img">
+</div>
+
+<script>
+    function getId(_id) {
+        return document.getElementById(_id)
+    }
+    var prize_img = getId('prize_img')
+    var lottery = false;
+    var personArr = new Array()
+    for (let i = 0; i < 199; i++) {
+        let obj = {}
+        obj.image = 'image/avatar.jpg'
+        obj.name = 'woiad'
+        obj.text = '越努力，越幸运！'
+        obj.pos_x = i % 20 + 1
+        obj.pos_y = Math.floor(i / 20) + 1
+        personArr.push(obj)
+    }
+    var table = new Array()
+    for (let i = 0; i < personArr.length; i++) {
+        table.push(personArr[i])
+    }
+
+    var camera, scene, renderer;
+    var controls;
+
+    var objects = [];
+    var targets = { table: [], sphere: [], helix: [], grid: [] };
+    var targetsdh = { table: [], sphere: [], helix: [], grid: [] };
+    init();
+    animate();
+
+    function init() {
+
+        camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 4000 );
+        camera.position.z = 3000;
+
+        scene = new THREE.Scene();
+
+        // table
+
+        for ( var i = 0; i < table.length; i ++ ) {
+
+            var element = document.createElement( 'div' );
+            element.className = 'element';
+            // element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+
+            var img = document.createElement( 'img' );
+            img.className = 'avatar';
+            img.src = table[i].image
+            element.appendChild(img);
+
+            // var p1 = document.createElement( 'p' );
+            // p1.className = 'name';
+            // p1.innerHTML = table[i].name;
+            // element.appendChild(p1);
+            //
+            // var p2 = document.createElement( 'p' );
+            // p2.className = 'motto';
+            // p2.innerHTML = table[i].text
+            // element.appendChild(p2);
+
+            var object = new THREE.CSS3DObject( element );
+            object.position.x = Math.random() * 4000 - 2000;
+            object.position.y = Math.random() * 4000 - 2000;
+            object.position.z = Math.random() * 4000 - 2000;
+            scene.add( object );
+
+            objects.push( object );
+
+            //
+
+            var object = new THREE.Object3D();
+            object.position.x = ( table[i].pos_x * 140 ) - 1330;
+            object.position.y = - ( table[i].pos_y * 180 ) + 990;
+
+            targets.table.push( object );
+
+        }
+
+        // sphere
+
+        var vector = new THREE.Vector3();
+
+        for ( var i = 0, l = objects.length; i < l; i ++ ) {
+
+            var phi = Math.acos( -1 + ( 2 * i ) / l );
+            var theta = Math.sqrt( l * Math.PI ) * phi;
+
+            var object = new THREE.Object3D();
+            object.position.x = 800 * Math.cos( theta ) * Math.sin( phi );
+            object.position.y = 800 * Math.sin( theta ) * Math.sin( phi );
+            object.position.z = 800 * Math.cos( phi );
+            vector.copy( object.position ).multiplyScalar( 2 );
+            object.lookAt( vector );
+            targets.sphere.push( object );
+
+
+            var object = new THREE.Object3D();
+            object.position.x = 9000 * Math.cos( theta ) * Math.sin( phi );
+            object.position.y = 9000 * Math.sin( theta ) * Math.sin( phi );
+            object.position.z = 9000 * Math.cos( phi );
+            vector.copy( object.position ).multiplyScalar( 2 );
+            object.lookAt( vector );
+            targetsdh.sphere.push( object );
+        }
+
+        // helix
+
+        var vector = new THREE.Vector3();
+        var cylindrical = new THREE.Cylindrical()
+
+        for ( var i = 0, l = objects.length; i < l; i ++ ) {
+
+            var phi = i * 0.175 + Math.PI;
+            var y = - (i * 5) + 450
+
+            var object = new THREE.Object3D();
+
+            cylindrical.set(900, phi, y)
+            object.position.setFromCylindrical(cylindrical)
+
+            vector.x = object.position.x * 2;
+            vector.y = object.position.y;
+            vector.z = object.position.z * 2;
+
+            object.lookAt( vector );
+
+            targets.helix.push( object );
+
+        }
+
+        // grid
+
+        for ( var i = 0; i < objects.length; i ++ ) {
+
+            var object = new THREE.Object3D();
+
+            object.position.x = ( ( i % 5 ) * 400 ) - 800; // 400 图片的左右僵局 800  x轴中心点
+            object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 300 ) + 500; // 500 y轴的中心点
+            object.position.z = ( Math.floor( i / 25 ) ) * 200 - 800; // 300 调整 片间距 800 z轴中心点
+
+            targets.grid.push( object );
+
+        }
+
+        //
+
+        renderer = new THREE.CSS3DRenderer();    //渲染器
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.domElement.style.position = 'absolute';
+       getId( 'container' ).appendChild( renderer.domElement );
+
+        //鼠标控制
+
+        controls = new THREE.TrackballControls( camera );  //控制器
+        controls.rotateSpeed = 0.5;
+        controls.minDistance = 500;
+        controls.maxDistance = 6000;
+        controls.addEventListener( 'change', render );
+
+        var button =getId('lottery');
+        button.addEventListener('click', function (event) {
+            let bol = false
+            if (!localStorage.getItem('lotteryType')){
+                alert('请选择奖项进行抽奖！')
+                return true
+            }
+            bol = setStorage()
+            if (!bol) {
+                if (!lottery) {
+                    transform(targets.sphere, 2000)
+                    prize_img.attributes[0].nodeValue = 'image/prize_stop.png'
+                    setTimeout(function () {
+                        lottery = true
+                    }, 2000)
+                } else {
+                    lottery = false
+                    transform(targets.grid, 2000)
+                    getId('tip_list').style.display = 'flex'
+                    lucky(1)
+                    prize_img.attributes[0].nodeValue = 'image/prize_start.png'
+                }
+            }
+
+        }, false)
+
+        transform( targets.grid, 5000 );
+
+        //
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
+    }
+
+    function transform( targets, duration ) {
+
+        TWEEN.removeAll();
+
+        for ( var i = 0; i < objects.length; i ++ ) {
+
+            var object = objects[ i ];
+            var target = targets[ i ];
+
+            new TWEEN.Tween( object.position )
+                .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+                //			.easing( TWEEN.Easing.Exponential.InOut )
+                .start();
+
+            new TWEEN.Tween( object.rotation )
+                .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+                //			.easing( TWEEN.Easing.Exponential.InOut )
+                .start();
+
+        }
+
+        new TWEEN.Tween( this )
+            .to( {}, duration * 2 )
+            .onUpdate( render )
+            .start();
+
+    }
+    //当窗口改变时，改变照相机的位置，改变渲染器的宽高，重新渲染窗口
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        render();
+    }
+    //循环动画
+    function animate() {
+        // 然场景通过x轴或y轴旋转
+        // scene.rotation.z += 0.011
+        scene.rotation.y += 0.008
+        if (lottery) {
+            scene.rotation.y += 0.08
+            scene.rotation.z += 0.011
+        } else{
+            scene.rotation.z  = 0
+        }
+        requestAnimationFrame( animate );
+        TWEEN.update();
+        controls.update();
+        // 渲染循环
+        render()
+    }
+    //重新渲染
+    function render() {
+        renderer.render( scene, camera );
+    }
+    function lucky(num) {
+        let times = 0
+        for (let i = 0; i < num; i++) {
+            setTimeout(function () {
+                var div = document.createElement('div')
+                div.className = 'list'
+                div.style.opacity = 0
+                div.style.animation = 'move 2s ease-in-out'
+                div.style.animationDelay = i * 0.5 +'s'
+                var img = document.createElement('img')
+                img.className = 'list_img'
+                img.src = 'image/avatar.jpg'
+                div.appendChild(img)
+                var p = document.createElement('p')
+                p.className = 'list_name'
+                p.innerHTML = 'woiad'
+                div.appendChild(p)
+                if (num > 20) {
+                    div.style.width = '100px'
+                    div.style.height = '100px'
+                    img.style.width = '45px'
+                    img.style.height = '45px'
+                    img.style.marginTop = '15px'
+                }
+                div.addEventListener('animationend', function () {
+                    times ++
+                    div.style.opacity = 1
+                    if (times === num) {
+                        setTimeout(function () {
+                            alert('本次抽奖完毕，请返回进行下等级抽奖')
+                            getId('back').disabled = false
+                        }, 500)
+                    }
+                }, false)
+                getId('tip_list').appendChild(div)
+            }, 500)
+        }
+    }
+
+
+    // 返回抽奖
+    getId('back').addEventListener('click', function () {
+        getId('tip_list').style.display = 'none'
+        var classNameList = document.getElementsByClassName('list')
+        while(classNameList.length > 0) {
+            classNameList[0].remove()
+        }
+    }, false)
+    // 设置抽奖Storage
+    function setStorage () {
+        if (!lottery) {
+            let lotteried = []
+            if (localStorage.getItem('lotteryType')) {
+                let lotteryArr = JSON.parse(localStorage.getItem('lotteryType'))
+                if (localStorage.getItem('lotteried')) {
+                    lotteried = JSON.parse(localStorage.getItem('lotteried'))
+                    if (lotteried.length === lotteryArr.length) {
+                        alert('请选择下一奖项!')
+                        return true
+                    } else {
+                        lotteried.push(lotteryArr[lotteryArr.length - 1])
+                        localStorage.setItem('lotteried', JSON.stringify(lotteried))
+                    }
+                } else {
+                    lotteried = lotteryArr
+                    localStorage.setItem('lotteried', JSON.stringify(lotteried))
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

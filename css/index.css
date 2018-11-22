@@ -1,0 +1,89 @@
+*{margin: 0;padding: 0;}
+@font-face {
+    font-family: god;
+    src: url('../font/ZiKuTangShiKeTi-2.ttf')
+}
+html, body{width: 100%;height: 100%;background: #fff;}
+.container{width: 100%;height: 100%;overflow: hidden;background: url("../image/side01.png") no-repeat;
+background-size: auto 100%;}
+.container .title{position: absolute;width: 460px;height: 70px;margin-top: 10px;left: 50%;margin-left: -230px;
+z-index: 200;background-image: url('../image/title.png');background-repeat: no-repeat;background-size: 100%;}
+.container .nav{width: 16px;height: 16px;position: absolute;top: 10px; left:4px;background-image: url('../image/nav.png');
+cursor: pointer;}
+.container .left_text{position: absolute;left: 5px;top: 40px;width: 20px;line-height: 25px;color: #fbf177;}
+.container .check{position: absolute;left: 5px;bottom: 20px;width: 20px;line-height: 25px;color: #fbf177;cursor: pointer;}
+.container .state{position: relative;margin-left: 27px;width: 100%;height: 100%;}
+.container .lucky-container{position: fixed;display: none;  top: 0;bottom: 0;left: 0;right: 0;background: rgba(0, 0, 0, .5);z-index: 300;}
+.container .lucky-wrapper{position: relative;width: 700px;height: 800px;top: 50%;margin-top: -400px;left: 50%;margin-left: -350px;
+background: url('../image/true (2).jpeg');background-size: 100% 100%;}
+.container .lucky-wrapper .lucky-close{position: absolute;width: 20px;height: 20px;top: -3px;right: -3px;
+background-image: url('../image/close.png');background-size: 100% 100%;cursor: pointer;background-color: #E56724;
+border-radius: 50%;}
+.container .lucky{position: absolute;top: 380px;}
+.container .lucky .prize_item{position: relative;width: 500px;margin:0 0 20px 100px;padding: 10px 5px 5px;border: 1px solid #FED073;height: 60px;text-align: center;
+box-sizing: border-box;}
+.container .lucky .prize_item h1{position: absolute;top: -13px;width: 160px;left: 50%;margin-left: -80px;background: #A40502;
+font-size: 20px;color: #f1be45;font-weight: 100;}
+.container .lucky .prize_item .name_list{display: flex;align-items: center;justify-content: center;height: 100%;flex-wrap: wrap;}
+.container .lucky .prize_item .name_list p{margin-right: 10px;color: #feb507;}
+.drawer{position: fixed;left: 0;top: 0;width: 200px;height: 100%;display: none;background: inherit;
+z-index: 1000;}
+.drawer .drawer-wrapper{width: 200px;position: absolute;left: 0;top: 0;bottom: 0;background-color: #bb1c33;
+box-shadow: 0px 0px 20px rgba(0, 0, 0, .3);transition: all .25s linear;background-image: none;
+background-size: 100% 100%;background-repeat: no-repeat;}
+.drawer .close{position: absolute;top: -1px;right: -2px;width: 15px;height: 15px;background-image: url('../image/close.png');
+    background-size: 100% 100%;z-index: 10;cursor: pointer;background-color: #6E0106;border-radius: 50%;}
+.drawer li{width: 100%;display: block;list-style: none;text-align: center;}
+.drawer li a{display: block;width: 100%;color: #e8bb50;text-decoration: none;height: 100%;}
+.slide-in{animation: slide-in .5s linear;display: block;-webkit-animation: slide-in .5s linear;-moz-animation: slide-in .5s linear;}
+.slide-out{display: block;animation: slide-out .5s linear;-webkit-animation: slide-out .5s linear;-moz-animation: slide-out .5s linear;}
+@-webkit-keyframes slide-in { /** 右侧滑入 **/
+    from{
+        transform: translateX(-200px);
+    }
+    to{
+        transform: translateX(0);
+    }
+}
+@-moz-keyframes slide-in {
+    from{
+        transform: translateX(-200px);
+    }
+    to{
+        transform: translateX(0);
+    }
+}
+@keyframes slide-in {
+    from{
+        transform: translateX(-200px);
+    }
+    to{
+        transform: translateX(0);
+    }
+}
+
+@-webkit-keyframes slide-out { /** 右侧滑出 **/
+    from{
+        transform: translateX(0);
+    }
+    to{
+        transform: translateX(-200px);
+    }
+}
+@-moz-keyframes slide-out {
+    from{
+        transform: translateX(0);
+    }
+    to{
+        transform: translateX(-200px);
+    }
+}
+
+@keyframes slide-out{
+    from{
+        transform: translateX(0);
+    }
+    to{
+        transform: translateX(-200px);
+    }
+}
