@@ -6,10 +6,9 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/animated.css">
 </head>
-<body>
+<body onkeydown="keydown(event)">
     <div class="container" id="container">
-        <div class="title">
-        </div>
+        <div class="title"></div>
         <div class="nav" id="nav"></div>
         <div class="left_text" id="awards">
             请选择奖项开始抽奖
@@ -18,7 +17,7 @@
             查看中奖名单
         </div>
         <div class="state" id="state">
-            <iframe src="rotate.html" width="100%" height="100%" frameborder="0"></iframe>
+            <iframe src="rotate.html" width="100%" height="100%" frameborder="0" id="frame"></iframe>
         </div>
         <div class="lucky-container animated fadeIn" id="luckyContainer">
             <div class="lucky-wrapper">
@@ -83,22 +82,22 @@
         <div class="close" id="close"></div>
         <div class="drawer-wrapper">
             <ul id="liWrapper">
-                <li class="animated bounceInDown">
+                <li>
                     <a href="javascript:;">特等奖<span>1名</span></a>
                 </li>
-                <li class="animated bounceInDown delay-1s">
+                <li>
                     <a href="javascript:;">一等奖<span>2名</span></a>
                 </li>
-                <li class="animated bounceInDown delay-2s">
+                <li>
                     <a href="javascript:;">二等奖<span>3名</span></a>
                 </li>
-                <li class="animated bounceInDown delay-3s">
+                <li>
                     <a href="javascript:;">三等奖<span>4名</span></a>
                 </li>
-                <li class="animated bounceInDown delay-4s">
+                <li>
                     <a href="javascript:;">随机<span>1名</span></a>
                 </li>
-                <li class="animated bounceInDown delay-5s">
+                <li>
                     <a href="javascript:;">随机<span>1名</span></a>
                 </li>
             </ul>

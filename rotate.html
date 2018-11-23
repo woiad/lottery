@@ -14,7 +14,13 @@
 <script src="js/CSS3DRenderer.js"></script>
 <script src="js/colorBarindex.js"></script>
 
-<div id="container">
+<div id="container" class="container">
+    <div class="audio-wrapper">
+        <div class="audio-btn" id="audioBtn">
+            <img src="image/music.svg">
+        </div>
+        <audio src="music/play.wav" id="music"></audio>
+    </div>
 </div>
 <div id="tip_list">
     <div class="tip_title" id="title">
@@ -25,7 +31,7 @@
         <button id="back" disabled="disabled">返回抽奖</button>
     </div>
 </div>
-<div id="lottery">
+<div id="lottery" onClick="btnFunc()">
     <img src="image/prize_start.png" id="prize_img">
 </div>
 
@@ -36,6 +42,8 @@
     var prize_img = getId('prize_img')
     var lottery = false;
     var personArr = new Array()
+    var audio = getId('music')
+    var btnFunc = ''
     for (let i = 0; i < 199; i++) {
         let obj = {}
         obj.image = 'image/avatar.jpg'
@@ -189,7 +197,7 @@
         controls.addEventListener( 'change', render );
 
         var button =getId('lottery');
-        button.addEventListener('click', function (event) {
+        btnFunc =  function (event) {
             let bol = false
             if (!localStorage.getItem('lotteryType')){
                 alert('请选择奖项进行抽奖！')
@@ -198,6 +206,9 @@
             bol = setStorage()
             if (!bol) {
                 if (!lottery) {
+                    audio.src = 'music/play.wav'
+                    audio.play()
+                    getId('audioBtn').classList.add('rotating')
                     transform(targets.sphere, 2000)
                     prize_img.attributes[0].nodeValue = 'image/prize_stop.png'
                     setTimeout(function () {
@@ -205,6 +216,8 @@
                     }, 2000)
                 } else {
                     lottery = false
+                    audio.src='music/lucky.wav'
+                    audio.play()
                     transform(targets.grid, 2000)
                     getId('tip_list').style.display = 'flex'
                     lucky(1)
@@ -212,14 +225,14 @@
                 }
             }
 
-        }, false)
+        }
 
         transform( targets.grid, 5000 );
 
         //
 
         window.addEventListener( 'resize', onWindowResize, false );
-
+        console.log(btnFunc)
     }
 
     function transform( targets, duration ) {
@@ -263,6 +276,7 @@
         scene.rotation.y += 0.008
         if (lottery) {
             scene.rotation.y += 0.08
+            setTimeout(function () {scene.rotation.y += 0.1}, 3000)
             scene.rotation.z += 0.011
         } else{
             scene.rotation.z  = 0
@@ -320,6 +334,8 @@
     // 返回抽奖
     getId('back').addEventListener('click', function () {
         getId('tip_list').style.display = 'none'
+        getId('audioBtn').classList.remove('rotating')
+        audio.pause()
         var classNameList = document.getElementsByClassName('list')
         while(classNameList.length > 0) {
             classNameList[0].remove()
@@ -327,6 +343,7 @@
     }, false)
     // 设置抽奖Storage
     function setStorage () {
+        var title = getId('title')
         if (!lottery) {
             let lotteried = []
             if (localStorage.getItem('lotteryType')) {
@@ -338,14 +355,23 @@
                         return true
                     } else {
                         lotteried.push(lotteryArr[lotteryArr.length - 1])
+                        title.innerText = lotteryArr[lotteryArr.length - 1] + '中奖名单'
                         localStorage.setItem('lotteried', JSON.stringify(lotteried))
                     }
                 } else {
                     lotteried = lotteryArr
+                    title.innerText = lotteryArr[0] + '中奖名单'
                     localStorage.setItem('lotteried', JSON.stringify(lotteried))
                 }
             }
         }
+    }
+    // 监听键盘事件
+    document.onkeydown = function (evt) {
+        alert(11)
+        evt = evt ? evt : ((window.evt) ? window.evt : '')
+        keyCode = evt.keyCode ? evt.keyCode : (evt.which ? evt.which : evt.chartCode)
+        console.log(keyCode)
     }
 </script>
 </body>

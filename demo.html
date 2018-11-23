@@ -6,8 +6,12 @@
 </head>
 <body>
 <script>
-    var str = '你好12/20'
-    let reg = //
+    document.onkeydown = function (evt) {
+        alert(11)
+        evt = evt ? evt : ((window.evt) ? window.evt : '')
+        keyCode = evt.keyCode ? evt.keyCode : (evt.which ? evt.which : evt.chartCode)
+        console.log(keyCode)
+    }
 </script>
 </body>
 </html>

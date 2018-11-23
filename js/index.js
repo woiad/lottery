@@ -40,29 +40,27 @@ getId('luckyClose').addEventListener('click', function () {
 getId('liWrapper').addEventListener('click', function (e) {
     var e = window.event || e
     var bol = ''
-    var text = ''
     if (e.target.tagName.toLowerCase() === 'a') {
         if (e.target.innerText === '特等奖1名') {
-            text = '特等奖'
+            getId('awards').innerText  = '特等奖'
             bol = setStorage(getId('awards').innerText)
         } else if (e.target.innerText === '一等奖2名') {
-            text = '一等奖'
+            getId('awards').innerText  = '一等奖'
             bol = setStorage(getId('awards').innerText)
         } else if (e.target.innerText === '二等奖3名') {
-            text = '二等奖'
+            getId('awards').innerText  = '二等奖'
             bol = setStorage(getId('awards').innerText)
         } else if (e.target.innerText === '三等奖4名') {
-            text = '三等奖'
+            getId('awards').innerText  = '三等奖'
             bol = setStorage(getId('awards').innerText)
         } else if (e.target.innerText === '随机1名') {
-            text = '随机'
+            getId('awards').innerText  = '随机'
             bol = setStorage(getId('awards').innerText)
         }
     }
     if (bol) {
         return true
     }
-    getId('awards').innerText = text
     getId('drawer').classList.remove('slide-in')
     getId('drawer').classList.add('slide-out')
     setTimeout(function () {
@@ -87,5 +85,14 @@ function setStorage (text) {
     } else {
         lotteryArr.push(text)
         localStorage.setItem('lotteryType', JSON.stringify(lotteryArr))
+    }
+}
+
+// 键盘事件
+function keydown (evt) {
+    evt = evt ? evt : ((window.evt) ? window.evt : '')
+    keyCode = evt.keyCode ? evt.keyCode : (evt.which ? evt.which : evt.chartCode)
+    if (keyCode === 32) {
+        getId('frame').contentWindow.btnFunc()
     }
 }
